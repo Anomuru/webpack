@@ -2,7 +2,7 @@ import {RuleSetRule} from "webpack";
 import {loader} from "mini-css-extract-plugin";
 import {BuildOptions} from "./types/config";
 
-export function buildLoaders(options: BuildOptions): RuleSetRule[] {
+export function buildLoaders({mode}: BuildOptions): RuleSetRule[] {
 
     const typescriptLoader = {
         test: /\.tsx?$/,
@@ -13,11 +13,18 @@ export function buildLoaders(options: BuildOptions): RuleSetRule[] {
     const styleLoader = {
         test: /\.s[ac]ss$/i,
         use: [
-            // Creates `style` nodes from JS strings
-            options.mode === "production" ? "style-loader" : loader,
-            // Translates CSS into CommonJS
-            "css-loader",
-            // Compiles Sass to CSS
+            mode === "development" ? "style-loader" : loader,
+            {
+                loader: "css-loader",
+                options: {
+                    modules: {
+                        auto: (resPath: string) => Boolean(resPath.includes(".module.")),
+                        localIdentName: mode === "development"
+                            ? "[path][name]__[local]--[hash:base64:5]"
+                            : "[hash:base64:5]"
+                    }
+                }
+            },
             "sass-loader",
         ],
     }

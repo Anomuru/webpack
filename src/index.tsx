@@ -1,10 +1,14 @@
 import ReactDOM from "react-dom/client";
+import {BrowserRouter} from "react-router-dom";
+
+import {App} from "./app/app";
+
 import "./app/styles/index.sass";
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 
 root.render(
-    <div >
-        dsfkasdf
-    </div>
+    <BrowserRouter>
+        <App/>
+    </BrowserRouter>
 )
